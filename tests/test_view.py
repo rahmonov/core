@@ -228,6 +228,11 @@ class TestView:
                 'test_exception', {'test': 'test'}
             ).cache_for(1, 'monthss')
 
+    def test_view_can_use_dot_notation(self):
+        view = self.container.make('View')
+
+        assert 'John' in view('mail.welcome', {'to': 'John'}).rendered_template
+        
     def test_view_can_change_template_splice(self):
         self.container.make('ViewClass').set_splice('.')
 
@@ -247,6 +252,7 @@ class TestView:
         assert 'John' in view('mail@welcome', {'to': 'John'}).rendered_template
         assert 'John' in view('mail@composers', {'test': 'John'}).rendered_template == 'John'
         assert 'John' in view('mail/welcome', {'to': 'John'}).rendered_template
+
 
     def test_can_add_tests_to_view(self):
         view = self.container.make('ViewClass')

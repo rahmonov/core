@@ -6,6 +6,7 @@ from jinja2 import (ChoiceLoader, Environment, FileSystemLoader, PackageLoader,
 from jinja2.exceptions import TemplateNotFound
 
 from masonite.exceptions import RequiredContainerBindingNotFound
+from masonite.helpers import dot
 
 
 def view(template='index', dictionary={}):
@@ -236,8 +237,12 @@ class View:
             template {string} -- Template to load environment from.
         """
 
-        self.template = template
-        self.filename = template.replace(self._splice, '/') + self.extension
+        if '.' in template:
+            self.template = dot(template, "{1}/{.}")
+        else:
+            self.template = template
+
+        self.filename = self.template.replace(self._splice, '/') + self.extension
 
         if template.startswith('/'):
             # Filter blanks strings from the split
